@@ -1,7 +1,9 @@
 proc main()
     var mod = io:libopen("add.so")
     var add = io:libsym(mod, "shsc_add")
-    io:print(add, lf)
+
+    io:print(mod, dbg:typename(mod), type(mod), lf)
+    io:print(add, dbg:typename(add), type(add), lf)
 
     # succeeds
     var res = add(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
