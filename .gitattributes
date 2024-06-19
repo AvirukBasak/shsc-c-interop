@@ -1,0 +1,3 @@
+*.shsc linguist-language=lua
+examples/*.txt linguist-language=lua
+tests/test.txt linguist-language=lua

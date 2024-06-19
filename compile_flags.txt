@@ -1,0 +1,8 @@
+-Wall
+-Wno-self-assign
+-Wno-unused-but-set-variable
+-Wno-unused-label
+-Ofast
+-Iinclude
+-Ilib
+-Isrc
