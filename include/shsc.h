@@ -23,6 +23,7 @@ typedef struct rt_DataList_t rt_DataList_t;
 typedef struct rt_DataMap_t rt_DataMap_t;
 typedef struct rt_DataProc_t rt_DataProc_t;
 typedef struct rt_DataLambda_t rt_DataLambda_t;
+typedef struct rt_DataLibHandle_t rt_DataLibHandle_t;
 
 /**
  * Prototype of a function defined in shared library
@@ -45,6 +46,7 @@ enum rt_DataType_t {
     rt_DATA_TYPE_MAP = 8,        /* hash map       : variable  */
     rt_DATA_TYPE_PROC = 9,       /* procedure      : ??  */
     rt_DATA_TYPE_LAMBDA = 10,    /* lambda         : ??  */
+    rt_DATA_TYPE_LIBHANDLE = 11, /* lib handle     : ??  */
 };
 
 struct rt_DataProc_t {
@@ -72,6 +74,11 @@ struct rt_DataLambda_t {
     const enum er_DataLambdaType_t type;
 };
 
+struct rt_DataLibHandle_t {
+    const void *handle;
+    const char *file_name;
+};
+
 struct rt_Data_t {
     union {
         const bool bul;
@@ -83,6 +90,7 @@ struct rt_Data_t {
         const rt_DataMap_t *mp;
         const rt_DataProc_t proc;
         const rt_DataLambda_t lambda;
+        const rt_DataLibHandle_t libhandle;
         const void *any;
     } data;
     const bool is_const;
