@@ -22,6 +22,7 @@ typedef struct rt_DataStr_t rt_DataStr_t;
 typedef struct rt_DataList_t rt_DataList_t;
 typedef struct rt_DataMap_t rt_DataMap_t;
 typedef struct rt_DataProc_t rt_DataProc_t;
+typedef struct rt_DataNativeFn_t rt_DataNativeFn_t;
 typedef struct rt_DataLambda_t rt_DataLambda_t;
 typedef struct rt_DataLibHandle_t rt_DataLibHandle_t;
 
@@ -55,48 +56,50 @@ struct rt_DataProc_t {
     const rt_Data_t *context;
 };
 
-enum er_DataLambdaType_t {
+enum rt_DataLambdaType_t {
     rt_DATA_LAMBDA_TYPE_NONNATIVE = 0,
     rt_DATA_LAMBDA_TYPE_NATIVE = 1,
 };
 
+struct rt_DataNativeFn_t {
+    rt_DataLibHandle_t *handle;
+    rt_DataStr_t *fn_name;
+    rt_fn_NativeFunction_t fn;
+};
+
 struct rt_DataLambda_t {
-    const ast_Identifier_t *module_name;
-    const char *file_name;
-
     const rt_Data_t *context;
-
     union {
         const ast_LambdaLiteral_t *nonnative;
-        const rt_fn_NativeFunction_t native;
+        rt_DataNativeFn_t native;
     } fnptr;
-
-    const enum er_DataLambdaType_t type;
+    enum rt_DataLambdaType_t type;
 };
 
-struct rt_DataLibHandle_t {
-    const void *handle;
-    const char *file_name;
-};
-
+/**
+ * Shsc rt_Data_t should not be used unless the purpose is to
+ * interact with Shsc data. Shsc data is reference counted
+ * and involves a large amount of overhead.
+ * Intead, make use of native data structures.
+ */
 struct rt_Data_t {
     union {
-        const bool bul;
-        const char chr;
-        const int64_t i64;
-        const double f64;
-        const rt_DataStr_t *str;
-        const rt_DataList_t *lst;
-        const rt_DataMap_t *mp;
-        const rt_DataProc_t proc;
-        const rt_DataLambda_t lambda;
-        const rt_DataLibHandle_t libhandle;
-        const void *any;
+        bool bul;
+        char chr;
+        int64_t i64;
+        double f64;
+        rt_DataStr_t *str;
+        rt_DataList_t *lst;
+        rt_DataMap_t *mp;
+        rt_DataProc_t proc;
+        rt_DataLambda_t lambda;
+        rt_DataLibHandle_t *libhandle;
+        void *any;
     } data;
-    const bool is_const;
-    const bool is_weak;
-    const bool lvalue;
-    const enum rt_DataType_t type;
+    bool is_const;
+    bool is_weak;
+    bool lvalue;
+    enum rt_DataType_t type;
 };
 
 rt_Data_t rt_Data_bul(bool val);
@@ -104,7 +107,6 @@ rt_Data_t rt_Data_chr(char val);
 rt_Data_t rt_Data_i64(int64_t val);
 rt_Data_t rt_Data_f64(double val);
 rt_Data_t rt_Data_str(rt_DataStr_t *str);
-rt_Data_t rt_Data_interp_str(const char *str);
 rt_Data_t rt_Data_list(rt_DataList_t *lst);
 rt_Data_t rt_Data_map(rt_DataMap_t *mp);
 rt_Data_t rt_Data_any(void *ptr);
@@ -116,13 +118,9 @@ bool rt_Data_isnull(const rt_Data_t var);
 bool rt_Data_isnumeric(const rt_Data_t var);
 bool rt_Data_isequal(const rt_Data_t var1, const rt_Data_t var2);
 int64_t rt_Data_compare(const rt_Data_t var1, const rt_Data_t var2);
-
-char *rt_Data_interp_str_parse(const char *str);
-
 bool rt_Data_tobool(const rt_Data_t var);
 char *rt_Data_tostr(const rt_Data_t var);
 rt_Data_t rt_Data_cast(const rt_Data_t var, enum rt_DataType_t type);
-
 const char *rt_Data_typename(const rt_Data_t var);
 bool rt_Data_assert_type(
     const rt_Data_t var,
@@ -130,19 +128,21 @@ bool rt_Data_assert_type(
     const char *for_varname
 );
 enum rt_DataType_t rt_Data_greater_type(const rt_Data_t var1, const rt_Data_t var2);
-
 int rt_Data_print(const rt_Data_t var);
+
+/*------------------------
+ |       VAR TABLE        |
+ ------------------------*/
+
+/**
+ * This function is used to modify the value of a variable that exists
+ * in the variable table. It takes care of reference counts.
+ */
+void rt_VarTable_modf(rt_Data_t *dest, rt_Data_t src);
 
 /*------------------------
  |       LIST DATA       |
  ------------------------*/
-
-struct rt_DataList_t {
-    const rt_Data_t *var;
-    const int64_t length;
-    const size_t capacity;
-    const int64_t rc;
-};
 
 /* macro that takes a variable number of rt_Data_t type arguments
    and calls rt_DataList_append for each item */
@@ -157,9 +157,22 @@ struct rt_DataList_t {
         lst;                                                 \
     })
 
-
+/**
+ * List types should not be used unless the purpose is to
+ * interact with Shsc lists. Shsc lists are reference counted
+ * and involve a large amount of overhead.
+ * Intead, make use of C arrays or other native data structures.
+ */
 rt_DataList_t *rt_DataList_init();
+
+/**
+ * List types should not be used unless the purpose is to
+ * interact with Shsc lists. Shsc lists are reference counted
+ * and involve a large amount of overhead.
+ * Intead, make use of C arrays or other native data structures.
+ */
 rt_DataList_t *rt_DataList_clone(const rt_DataList_t *lst);
+
 int64_t rt_DataList_length(const rt_DataList_t *lst);
 void rt_DataList_destroy(rt_DataList_t **ptr);
 bool rt_DataList_isequal(const rt_DataList_t *lst1, const rt_DataList_t *lst2);
@@ -188,19 +201,22 @@ char *rt_DataList_tostr(const rt_DataList_t *lst);
  |       MAP DATA        |
  ------------------------*/
 
-typedef struct {
-    const char *key;
-    const rt_Data_t value;
-} rt_DataMap_Entry_t;
-
-struct rt_DataMap_t {
-    const void *data_map;
-    const int64_t length;
-    const int64_t rc;
-};
-
+/**
+ * Map types should not be used unless the purpose is to
+ * interact with Shsc maps. Shsc maps are reference counted
+ * and involve a large amount of overhead.
+ * Intead, make use of C hash maps or other native data structures.
+ */
 rt_DataMap_t *rt_DataMap_init();
+
+/**
+ * Map types should not be used unless the purpose is to
+ * interact with Shsc maps. Shsc maps are reference counted
+ * and involve a large amount of overhead.
+ * Intead, make use of C hash maps or other native data structures.
+ */
 rt_DataMap_t *rt_DataMap_clone(const rt_DataMap_t *mp);
+
 int64_t rt_DataMap_length(const rt_DataMap_t *mp);
 void rt_DataMap_destroy(rt_DataMap_t **ptr);
 void rt_DataMap_insert(rt_DataMap_t *mp, const char *key, rt_Data_t value);
@@ -222,11 +238,20 @@ char *rt_DataMap_tostr(const rt_DataMap_t *mp);
  |       STR DATA        |
  ------------------------*/
 
-struct rt_DataStr_t {
-    const rt_DataList_t *var;
-};
-
+/**
+ * String types should not be used unless the purpose is to
+ * interact with Shsc strings. Shsc strings are reference counted
+ * and involve a large amount of overhead.
+ * Intead, make use of C strings or other native data structures.
+ */
 rt_DataStr_t *rt_DataStr_init(const char *s);
+
+/**
+ * String types should not be used unless the purpose is to
+ * interact with Shsc strings. Shsc strings are reference counted
+ * and involve a large amount of overhead.
+ * Intead, make use of C strings or other native data structures.
+ */
 rt_DataStr_t *rt_DataStr_clone(const rt_DataStr_t *str);
 
 int64_t rt_DataStr_length(const rt_DataStr_t *str);
@@ -304,6 +329,16 @@ rt_Data_t rt_fn_call_handler(
     const rt_Data_t context,
     const char *module_name,
     const char *proc_name,
+    rt_DataList_t *args
+);
+
+/**
+ * This function is provided for calling lambda functions.
+ * Such lambda functions may be passed by from Shsc code as callbacks.
+ */
+rt_Data_t rt_fn_lambda_call_handler(
+    const rt_Data_t context,
+    const rt_DataLambda_t lambda,
     rt_DataList_t *args
 );
 
