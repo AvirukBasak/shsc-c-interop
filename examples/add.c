@@ -3,18 +3,18 @@
 
 rt_Data_t shsc_add(rt_Data_t context, rt_DataList_t *numbers) {
     // validate input
-    for (int i = 0; i < rt_DataList_length(numbers); ++i) {
+    for (int i = 0; i < shsc_rt_DataList_length(numbers); ++i) {
         char str[1024] = {0};
         sprintf(str, "number[%d]", i);
 
         // complex, adds a stack frame for better error messages
-        rt_fn_call_handler(
-            rt_Data_null(),
+        shsc_rt_fn_call_handler(
+            shsc_rt_Data_null(),
             "assert", "type",
-            rt_DataList_from(
-                *rt_DataList_getref(numbers, i),
-                rt_Data_i64(rt_DATA_TYPE_I64),
-                rt_Data_str(rt_DataStr_init(str))
+            shsc_rt_DataList_from(
+                *shsc_rt_DataList_getref(numbers, i),
+                shsc_rt_Data_i64(rt_DATA_TYPE_I64),
+                shsc_rt_Data_str(shsc_rt_DataStr_init(str))
             )
         );
 
@@ -27,9 +27,9 @@ rt_Data_t shsc_add(rt_Data_t context, rt_DataList_t *numbers) {
     }
 
     int64_t sum = 0;
-    for (int i = 0; i < rt_DataList_length(numbers); ++i) {
-        sum += rt_DataList_getref(numbers, i)->data.i64;
+    for (int i = 0; i < shsc_rt_DataList_length(numbers); ++i) {
+        sum += shsc_rt_DataList_getref(numbers, i)->data.i64;
     }
 
-    return rt_Data_i64(sum);
+    return shsc_rt_Data_i64(sum);
 }
