@@ -4,6 +4,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#if _WIN32
+    #define SHSC_EXPORT __declspec(dllexport)
+#else
+    #define SHSC_EXPORT __attribute__((visibility("default")))
+#endif
+
 /*------------------------
  |      AST STRUCTS      |
  ------------------------*/
