@@ -1,261 +1,120 @@
-#include "shsc.h"
 #include <stdio.h>
-
 #include "shscfnptr.h"
 
-rt_Data_t          (* shsc_rt_Data_bul)         (bool            val) = NULL;
-rt_Data_t          (* shsc_rt_Data_chr)         (char            val) = NULL;
-rt_Data_t          (* shsc_rt_Data_i64)         (int64_t         val) = NULL;
-rt_Data_t          (* shsc_rt_Data_f64)         (double          val) = NULL;
-rt_Data_t          (* shsc_rt_Data_str)         (rt_DataStr_t   *str) = NULL;
-rt_Data_t          (* shsc_rt_Data_list)        (rt_DataList_t  *lst) = NULL;
-rt_Data_t          (* shsc_rt_Data_map)         (rt_DataMap_t   *mp)  = NULL;
-rt_Data_t          (* shsc_rt_Data_any)         (void           *ptr) = NULL;
-rt_Data_t          (* shsc_rt_Data_null)        (void) = NULL;
-rt_Data_t          (* shsc_rt_Data_clone)       (const rt_Data_t var) = NULL;
-void               (* shsc_rt_Data_destroy)     (rt_Data_t      *var) = NULL;
-bool               (* shsc_rt_Data_isnull)      (const rt_Data_t var) = NULL;
-bool               (* shsc_rt_Data_isnumeric)   (const rt_Data_t var) = NULL;
-bool               (* shsc_rt_Data_isequal)     (const rt_Data_t var1, const rt_Data_t    var2) = NULL;
-int64_t            (* shsc_rt_Data_compare)     (const rt_Data_t var1, const rt_Data_t    var2) = NULL;
-bool               (* shsc_rt_Data_tobool)      (const rt_Data_t var) = NULL;
-char              *(* shsc_rt_Data_tostr)       (const rt_Data_t var) = NULL;
-rt_Data_t          (* shsc_rt_Data_cast)        (const rt_Data_t var,  enum rt_DataType_t type) = NULL;
-const char        *(* shsc_rt_Data_typename)    (const rt_Data_t var) = NULL;
-bool               (* shsc_rt_Data_assert_type) (const rt_Data_t var,  enum rt_DataType_t expected_type, const char *for_varname) = NULL;
-enum rt_DataType_t (* shsc_rt_Data_greater_type)(const rt_Data_t var1, const rt_Data_t    var2) = NULL;
-int                (* shsc_rt_Data_print)       (const rt_Data_t var) = NULL;
-
-/*------------------------
- |       VAR TABLE        |
- ------------------------*/
-
-/**
- * This function is used to modify the value of a variable that exists
- * in the variable table. It takes care of reference counts.
- */
-rt_Data_t         *(* shsc_rt_VarTable_modf)    (rt_Data_t *dest, rt_Data_t src, bool is_const, bool is_weak) = NULL;
-
-/*------------------------
- |       LIST DATA       |
- ------------------------*/
-
-/**
- * List types should not be used unless the purpose is to
- * interact with Shsc lists. Shsc lists are reference counted
- * and involve a large amount of overhead.
- * Intead, make use of C arrays or other native data structures.
- */
-rt_DataList_t     *(* shsc_rt_DataList_init)() = NULL;
-
-/**
- * List types should not be used unless the purpose is to
- * interact with Shsc lists. Shsc lists are reference counted
- * and involve a large amount of overhead.
- * Intead, make use of C arrays or other native data structures.
- */
-rt_DataList_t *    (* shsc_rt_DataList_clone)         (const rt_DataList_t *lst) = NULL;
-
-int64_t            (* shsc_rt_DataList_length)        (const rt_DataList_t *lst) = NULL;
-void               (* shsc_rt_DataList_destroy)       (rt_DataList_t      **ptr) = NULL;
-bool               (* shsc_rt_DataList_isequal)       (const rt_DataList_t *lst1, const rt_DataList_t *lst2) = NULL;
-int64_t            (* shsc_rt_DataList_compare)       (const rt_DataList_t *lst1, const rt_DataList_t *lst2) = NULL;
-void               (* shsc_rt_DataList_append)        (rt_DataList_t       *lst,  rt_Data_t            var) = NULL;
-void               (* shsc_rt_DataList_concat)        (rt_DataList_t       *lst,  const rt_DataList_t *lst2) = NULL;
-void               (* shsc_rt_DataList_insert)        (rt_DataList_t       *lst,  int64_t              idx,   rt_Data_t var) = NULL;
-void               (* shsc_rt_DataList_erase)         (rt_DataList_t       *lst,  int64_t              idx,   int64_t   len) = NULL;
-void               (* shsc_rt_DataList_reverse)       (rt_DataList_t       *lst) = NULL;
-int64_t            (* shsc_rt_DataList_find)          (const rt_DataList_t *lst,  rt_Data_t            var) = NULL;
-rt_DataList_t     *(* shsc_rt_DataList_sublist)       (const rt_DataList_t *lst,  int64_t              idx,   int64_t   len) = NULL;
-rt_DataStr_t      *(* shsc_rt_DataList_join)          (const rt_DataList_t *lst,  const rt_DataStr_t  *sep) = NULL;
-rt_DataList_t     *(* shsc_rt_DataList_sort)          (rt_DataList_t       *lst) = NULL;
-rt_Data_t         *(* shsc_rt_DataList_getref_errnull)(const rt_DataList_t *lst,  int64_t              idx) = NULL;
-
-/** data should be updated only by calling
-    `void rt_VarTable_modf(rt_Data_t *dest, rt_Data_t src)`
-    on the returned data pointer, that'll take care of reference counts */
-rt_Data_t         *(* shsc_rt_DataList_getref)        (const rt_DataList_t *lst, int64_t   idx) = NULL;
-
-void               (* shsc_rt_DataList_del_index)     (rt_DataList_t       *lst, int64_t   idx) = NULL;
-void               (* shsc_rt_DataList_del_val)       (rt_DataList_t       *lst, rt_Data_t var) = NULL;
-char              *(* shsc_rt_DataList_tostr)         (const rt_DataList_t *lst) = NULL;
-
-/*------------------------
- |       MAP DATA        |
- ------------------------*/
-
-/**
- * Map types should not be used unless the purpose is to
- * interact with Shsc maps. Shsc maps are reference counted
- * and involve a large amount of overhead.
- * Intead, make use of C hash maps or other native data structures.
- */
-rt_DataMap_t      *(* shsc_rt_DataMap_init)() = NULL;
-
-/**
- * Map types should not be used unless the purpose is to
- * interact with Shsc maps. Shsc maps are reference counted
- * and involve a large amount of overhead.
- * Intead, make use of C hash maps or other native data structures.
- */
-rt_DataMap_t      *(* shsc_rt_DataMap_clone)          (const rt_DataMap_t  *mp) = NULL;
-
-int64_t            (* shsc_rt_DataMap_length)         (const rt_DataMap_t  *mp) = NULL;
-void               (* shsc_rt_DataMap_destroy)        (rt_DataMap_t       **ptr) = NULL;
-void               (* shsc_rt_DataMap_insert)         (rt_DataMap_t        *mp,   const char         *key,  rt_Data_t value) = NULL;
-void               (* shsc_rt_DataMap_del)            (rt_DataMap_t        *mp,   const char         *key) = NULL;
-void               (* shsc_rt_DataMap_concat)         (const rt_DataMap_t  *mp1,  const rt_DataMap_t *mp2) = NULL;
-const char        *(* shsc_rt_DataMap_getkey_copy)    (const rt_DataMap_t  *mp,   const char         *key) = NULL;
-
-/** unlike rt_DataMap_getref, returns NULL if key not found */
-rt_Data_t         *(* shsc_rt_DataMap_getref_errnull) (const rt_DataMap_t *mp,    const char         *key) = NULL;
-
-/** unlike rt_DataMap_getref_errnull, CRASHES using rt_throw if key not found.
-    data should be updated only by calling
-    `void rt_VarTable_modf(rt_Data_t *dest, rt_Data_t src)`
-    on the returned data pointer, that'll take care of reference counts */
-rt_Data_t         *(* shsc_rt_DataMap_getref)         (const rt_DataMap_t *mp,     const char        *key) = NULL;
-
-char              *(* shsc_rt_DataMap_tostr)          (const rt_DataMap_t *mp) = NULL;
-
-/*------------------------
- |       STR DATA        |
- ------------------------*/
-
-/**
- * String types should not be used unless the purpose is to
- * interact with Shsc strings. Shsc strings are reference counted
- * and involve a large amount of overhead.
- * Intead, make use of C strings or other native data structures.
- */
-rt_DataStr_t      *(* shsc_rt_DataStr_init)(const char *s) = NULL;
-
-/**
- * String types should not be used unless the purpose is to
- * interact with Shsc strings. Shsc strings are reference counted
- * and involve a large amount of overhead.
- * Intead, make use of C strings or other native data structures.
- */
-rt_DataStr_t      *(* shsc_rt_DataStr_clone)          (const rt_DataStr_t *str) = NULL;
-
-int64_t            (* shsc_rt_DataStr_length)         (const rt_DataStr_t *str) = NULL;
-void               (* shsc_rt_DataStr_destroy)        (rt_DataStr_t       **ptr) = NULL;
-void               (* shsc_rt_DataStr_toupper)        (rt_DataStr_t        *str) = NULL;
-void               (* shsc_rt_DataStr_tolower)        (rt_DataStr_t        *str) = NULL;
-void               (* shsc_rt_DataStr_append)         (rt_DataStr_t        *str, char                 ch) = NULL;
-void               (* shsc_rt_DataStr_concat)         (rt_DataStr_t        *str, const rt_DataStr_t  *str2) = NULL;
-void               (* shsc_rt_DataStr_insert)         (rt_DataStr_t        *str, int64_t              idx, char                ch) = NULL;
-void               (* shsc_rt_DataStr_insert_str)     (rt_DataStr_t        *str, int64_t              idx, const rt_DataStr_t *str2) = NULL;
-void               (* shsc_rt_DataStr_erase)          (rt_DataStr_t        *str, int64_t              idx, int64_t             len) = NULL;
-void               (* shsc_rt_DataStr_reverse)        (rt_DataStr_t        *str) = NULL;
-bool               (* shsc_rt_DataStr_isequal)        (const rt_DataStr_t  *str, const rt_DataStr_t  *str2) = NULL;
-int64_t            (* shsc_rt_DataStr_compare)        (const rt_DataStr_t  *str, const rt_DataStr_t  *str2) = NULL;
-int64_t            (* shsc_rt_DataStr_find)           (const rt_DataStr_t  *str, char                 ch) = NULL;
-int64_t            (* shsc_rt_DataStr_find_str)       (const rt_DataStr_t  *str, const rt_DataStr_t  *str2) = NULL;
-rt_DataStr_t      *(* shsc_rt_DataStr_substr)         (const rt_DataStr_t  *str, int64_t idx, int64_t len) = NULL;
-rt_DataList_t     *(* shsc_rt_DataStr_split)          (const rt_DataStr_t  *str, char                 ch) = NULL;
-rt_DataList_t     *(* shsc_rt_DataStr_split_str)      (const rt_DataStr_t  *str, const rt_DataStr_t  *str2) = NULL;
-rt_DataStr_t      *(* shsc_rt_DataStr_sort)           (rt_DataStr_t        *str) = NULL;
-rt_Data_t          (* shsc_rt_DataStr_toi64)          (const rt_DataStr_t  *str) = NULL;
-rt_Data_t          (* shsc_rt_DataStr_tof64)          (const rt_DataStr_t  *str) = NULL;
-char              *(* shsc_rt_DataStr_getref_errnull) (const rt_DataStr_t  *str, int64_t idx) = NULL;
-
-/** data can be updated by assigning a char to the returned pointer */
-rt_Data_t         *(* shsc_rt_DataStr_getref)(const rt_DataStr_t *str, int64_t idx) = NULL;
-
-void               (* shsc_rt_DataStr_del_index)      (rt_DataStr_t *str, int64_t idx) = NULL;
-void               (* shsc_rt_DataStr_del_char)       (rt_DataStr_t *str, char ch) = NULL;
-char              *(* shsc_rt_DataStr_tostr)          (const rt_DataStr_t *str) = NULL;
-
-/*------------------------
- |  RUNTIME FUNCTIONS    |
- ------------------------*/
-
-/**
- * Throws a runtime error with the given message.
- * The message can be formatted using printf-style format specifiers.
- */
-void (* shsc_rt_throw)(const char *fmt, ...) __attribute__((format(printf, 1, 2))) = NULL;
-
-/*------------------------
- | FUNCTION CALL HANDLER |
- ------------------------*/
-
-/**
- * Calls rt_throw if the number of arguments is less than min_expected_argc.
- * Results in a runtime error.
- */
-const rt_DataList_t *(* shsc_rt_fn_get_valid_args)(int64_t min_expected_argc) = NULL;
-
-/**
- * Call a function given the module name, procedure name and arguments.
- * Useful for calling predefined shsc functions.
- *
- * Example:
- *
- * ```c
- * // take in input from user
- * const rt_DataStr_t *prompt_str = rt_DataStr_init("Enter two numbers: ") = NULL;
- * const rt_Data_t prompt_var = rt_Data_str(prompt_str) = NULL;
- *
- * rt_Data_t input = rt_fn_call_handler(rt_Data_null(), "io", "input", rt_DataList_from(
- *     prompt_var,
- *     rt_Data_i64(rt_DATA_TYPE_I64)
- * )) = NULL;
- *
- * rt_DataStr_destroy(&prompt_str) = NULL;
- * ```
- */
-rt_Data_t (* shsc_rt_fn_call_handler)(
-    const rt_Data_t context,
-    const char *module_name,
-    const char *proc_name,
-    rt_DataList_t *args
-) = NULL;
-
-/**
- * This function is provided for calling lambda functions.
- * Such lambda functions may be passed by from Shsc code as callbacks.
- */
-rt_Data_t (* shsc_rt_fn_lambda_call_handler)(
-    const rt_Data_t context,
-    const rt_DataLambda_t lambda,
-    rt_DataList_t *args
-) = NULL;
-
-/*------------------------
- |       OPERATORS       |
- ------------------------*/
-
-void (* shsc_rt_op_ampersand)              (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_arith_rshift)           (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_assign)                 (rt_Data_t       *lhs, const rt_Data_t *rhs, bool is_const, bool is_weak) = NULL;
-void (* shsc_rt_op_asterix)                (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_bang)                   (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_bitwise_lshift)         (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_bitwise_rshift)         (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_caret)                  (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_decrement)              (rt_Data_t       *lhs, rt_Data_t       *rhs) = NULL;
-void (* shsc_rt_op_dot)                    (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_exponent)               (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_floor_divide)           (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_fslash)                 (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_increment)              (rt_Data_t       *lhs, rt_Data_t       *rhs) = NULL;
-void (* shsc_rt_op_lbrace_angular)         (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_logical_and)            (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_logical_equal)          (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_logical_greater_equal)  (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_logical_lesser_equal)   (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_logical_or)             (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_logical_unequal)        (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_minus)                  (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_percent)                (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_pipe)                   (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_plus)                   (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_rbrace_angular)         (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_tilde)                  (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_fnargs_indexing)        (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_fncall)                 (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_indexing)               (const rt_Data_t *lhs, const rt_Data_t *rhs) = NULL;
-void (* shsc_rt_op_nop)                    (const rt_Data_t *lhs) = NULL;
-void (* shsc_rt_op_ternary_cond)           (const rt_Data_t *lhs, const rt_Data_t *rhs, const rt_Data_t *condition) = NULL;
+shsc_rt_Data_bul_t shsc_rt_Data_bul = NULL;
+shsc_rt_Data_chr_t shsc_rt_Data_chr = NULL;
+shsc_rt_Data_i64_t shsc_rt_Data_i64 = NULL;
+shsc_rt_Data_f64_t shsc_rt_Data_f64 = NULL;
+shsc_rt_Data_str_t shsc_rt_Data_str = NULL;
+shsc_rt_Data_list_t shsc_rt_Data_list = NULL;
+shsc_rt_Data_map_t shsc_rt_Data_map = NULL;
+shsc_rt_Data_any_t shsc_rt_Data_any = NULL;
+shsc_rt_Data_null_t shsc_rt_Data_null = NULL;
+shsc_rt_Data_clone_t shsc_rt_Data_clone = NULL;
+shsc_rt_Data_destroy_t shsc_rt_Data_destroy = NULL;
+shsc_rt_Data_isnull_t shsc_rt_Data_isnull = NULL;
+shsc_rt_Data_isnumeric_t shsc_rt_Data_isnumeric = NULL;
+shsc_rt_Data_isequal_t shsc_rt_Data_isequal = NULL;
+shsc_rt_Data_compare_t shsc_rt_Data_compare = NULL;
+shsc_rt_Data_tobool_t shsc_rt_Data_tobool = NULL;
+shsc_rt_Data_tostr_t shsc_rt_Data_tostr = NULL;
+shsc_rt_Data_cast_t shsc_rt_Data_cast = NULL;
+shsc_rt_Data_typename_t shsc_rt_Data_typename = NULL;
+shsc_rt_Data_assert_type_t shsc_rt_Data_assert_type = NULL;
+shsc_rt_Data_greater_type_t shsc_rt_Data_greater_type = NULL;
+shsc_rt_Data_print_t shsc_rt_Data_print = NULL;
+shsc_rt_VarTable_modf_t shsc_rt_VarTable_modf = NULL;
+shsc_rt_DataList_init_t shsc_rt_DataList_init = NULL;
+shsc_rt_DataList_clone_t shsc_rt_DataList_clone = NULL;
+shsc_rt_DataList_length_t shsc_rt_DataList_length = NULL;
+shsc_rt_DataList_destroy_t shsc_rt_DataList_destroy = NULL;
+shsc_rt_DataList_isequal_t shsc_rt_DataList_isequal = NULL;
+shsc_rt_DataList_compare_t shsc_rt_DataList_compare = NULL;
+shsc_rt_DataList_append_t shsc_rt_DataList_append = NULL;
+shsc_rt_DataList_concat_t shsc_rt_DataList_concat = NULL;
+shsc_rt_DataList_insert_t shsc_rt_DataList_insert = NULL;
+shsc_rt_DataList_erase_t shsc_rt_DataList_erase = NULL;
+shsc_rt_DataList_reverse_t shsc_rt_DataList_reverse = NULL;
+shsc_rt_DataList_find_t shsc_rt_DataList_find = NULL;
+shsc_rt_DataList_sublist_t shsc_rt_DataList_sublist = NULL;
+shsc_rt_DataList_join_t shsc_rt_DataList_join = NULL;
+shsc_rt_DataList_sort_t shsc_rt_DataList_sort = NULL;
+shsc_rt_DataList_getref_errnull_t shsc_rt_DataList_getref_errnull = NULL;
+shsc_rt_DataList_getref_t shsc_rt_DataList_getref = NULL;
+shsc_rt_DataList_del_index_t shsc_rt_DataList_del_index = NULL;
+shsc_rt_DataList_del_val_t shsc_rt_DataList_del_val = NULL;
+shsc_rt_DataList_tostr_t shsc_rt_DataList_tostr = NULL;
+shsc_rt_DataMap_init_t shsc_rt_DataMap_init = NULL;
+shsc_rt_DataMap_clone_t shsc_rt_DataMap_clone = NULL;
+shsc_rt_DataMap_length_t shsc_rt_DataMap_length = NULL;
+shsc_rt_DataMap_destroy_t shsc_rt_DataMap_destroy = NULL;
+shsc_rt_DataMap_insert_t shsc_rt_DataMap_insert = NULL;
+shsc_rt_DataMap_del_t shsc_rt_DataMap_del = NULL;
+shsc_rt_DataMap_concat_t shsc_rt_DataMap_concat = NULL;
+shsc_rt_DataMap_getkey_copy_t shsc_rt_DataMap_getkey_copy = NULL;
+shsc_rt_DataMap_getref_errnull_t shsc_rt_DataMap_getref_errnull = NULL;
+shsc_rt_DataMap_getref_t shsc_rt_DataMap_getref = NULL;
+shsc_rt_DataMap_tostr_t shsc_rt_DataMap_tostr = NULL;
+shsc_rt_DataStr_init_t shsc_rt_DataStr_init = NULL;
+shsc_rt_DataStr_clone_t shsc_rt_DataStr_clone = NULL;
+shsc_rt_DataStr_length_t shsc_rt_DataStr_length = NULL;
+shsc_rt_DataStr_destroy_t shsc_rt_DataStr_destroy = NULL;
+shsc_rt_DataStr_toupper_t shsc_rt_DataStr_toupper = NULL;
+shsc_rt_DataStr_tolower_t shsc_rt_DataStr_tolower = NULL;
+shsc_rt_DataStr_append_t shsc_rt_DataStr_append = NULL;
+shsc_rt_DataStr_concat_t shsc_rt_DataStr_concat = NULL;
+shsc_rt_DataStr_insert_t shsc_rt_DataStr_insert = NULL;
+shsc_rt_DataStr_insert_str_t shsc_rt_DataStr_insert_str = NULL;
+shsc_rt_DataStr_erase_t shsc_rt_DataStr_erase = NULL;
+shsc_rt_DataStr_reverse_t shsc_rt_DataStr_reverse = NULL;
+shsc_rt_DataStr_isequal_t shsc_rt_DataStr_isequal = NULL;
+shsc_rt_DataStr_compare_t shsc_rt_DataStr_compare = NULL;
+shsc_rt_DataStr_find_t shsc_rt_DataStr_find = NULL;
+shsc_rt_DataStr_find_str_t shsc_rt_DataStr_find_str = NULL;
+shsc_rt_DataStr_substr_t shsc_rt_DataStr_substr = NULL;
+shsc_rt_DataStr_split_t shsc_rt_DataStr_split = NULL;
+shsc_rt_DataStr_split_str_t shsc_rt_DataStr_split_str = NULL;
+shsc_rt_DataStr_sort_t shsc_rt_DataStr_sort = NULL;
+shsc_rt_DataStr_toi64_t shsc_rt_DataStr_toi64 = NULL;
+shsc_rt_DataStr_tof64_t shsc_rt_DataStr_tof64 = NULL;
+shsc_rt_DataStr_getref_errnull_t shsc_rt_DataStr_getref_errnull = NULL;
+shsc_rt_DataStr_getref_t shsc_rt_DataStr_getref = NULL;
+shsc_rt_DataStr_del_index_t shsc_rt_DataStr_del_index = NULL;
+shsc_rt_DataStr_del_char_t shsc_rt_DataStr_del_char = NULL;
+shsc_rt_DataStr_tostr_t shsc_rt_DataStr_tostr = NULL;
+shsc_rt_throw_t shsc_rt_throw = NULL;
+shsc_rt_fn_get_valid_args_t shsc_rt_fn_get_valid_args = NULL;
+shsc_rt_fn_call_handler_t shsc_rt_fn_call_handler = NULL;
+shsc_rt_fn_lambda_call_handler_t shsc_rt_fn_lambda_call_handler = NULL;
+shsc_rt_op_ampersand_t shsc_rt_op_ampersand = NULL;
+shsc_rt_op_arith_rshift_t shsc_rt_op_arith_rshift = NULL;
+shsc_rt_op_assign_t shsc_rt_op_assign = NULL;
+shsc_rt_op_asterix_t shsc_rt_op_asterix = NULL;
+shsc_rt_op_bang_t shsc_rt_op_bang = NULL;
+shsc_rt_op_bitwise_lshift_t shsc_rt_op_bitwise_lshift = NULL;
+shsc_rt_op_bitwise_rshift_t shsc_rt_op_bitwise_rshift = NULL;
+shsc_rt_op_caret_t shsc_rt_op_caret = NULL;
+shsc_rt_op_decrement_t shsc_rt_op_decrement = NULL;
+shsc_rt_op_dot_t shsc_rt_op_dot = NULL;
+shsc_rt_op_exponent_t shsc_rt_op_exponent = NULL;
+shsc_rt_op_floor_divide_t shsc_rt_op_floor_divide = NULL;
+shsc_rt_op_fslash_t shsc_rt_op_fslash = NULL;
+shsc_rt_op_increment_t shsc_rt_op_increment = NULL;
+shsc_rt_op_lbrace_angular_t shsc_rt_op_lbrace_angular = NULL;
+shsc_rt_op_logical_and_t shsc_rt_op_logical_and = NULL;
+shsc_rt_op_logical_equal_t shsc_rt_op_logical_equal = NULL;
+shsc_rt_op_logical_greater_equal_t shsc_rt_op_logical_greater_equal = NULL;
+shsc_rt_op_logical_lesser_equal_t shsc_rt_op_logical_lesser_equal = NULL;
+shsc_rt_op_logical_or_t shsc_rt_op_logical_or = NULL;
+shsc_rt_op_logical_unequal_t shsc_rt_op_logical_unequal = NULL;
+shsc_rt_op_minus_t shsc_rt_op_minus = NULL;
+shsc_rt_op_percent_t shsc_rt_op_percent = NULL;
+shsc_rt_op_pipe_t shsc_rt_op_pipe = NULL;
+shsc_rt_op_plus_t shsc_rt_op_plus = NULL;
+shsc_rt_op_rbrace_angular_t shsc_rt_op_rbrace_angular = NULL;
+shsc_rt_op_tilde_t shsc_rt_op_tilde = NULL;
+shsc_rt_op_fnargs_indexing_t shsc_rt_op_fnargs_indexing = NULL;
+shsc_rt_op_fncall_t shsc_rt_op_fncall = NULL;
+shsc_rt_op_indexing_t shsc_rt_op_indexing = NULL;
+shsc_rt_op_nop_t shsc_rt_op_nop = NULL;
+shsc_rt_op_ternary_cond_t shsc_rt_op_ternary_cond = NULL;
