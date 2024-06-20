@@ -15,13 +15,13 @@ Run `make` and the static library will be generated at `target/libshsc.a` (or `t
 
 To compile the `add.c` test library, run the following command:
 ```sh
-gcc -shared -fPIC -o examples/add.so examples/add.c
+gcc -Iinclude -shared -fPIC -o examples/add.so examples/add.c -Ltarget -llibshsc
 LD_LIBRARY_PATH=$PWD/examples shsc examples/add.shsc
 ```
 
 On windows, you can use the following command:
 ```sh
-gcc -shared -fPIC -o examples/add.dll examples/add.c
+gcc -Iinclude -shared -fPIC -o examples/add.dll examples/add.c -Ltarget -llibshsc
 shsc examples/add.shsc
 ```
 
