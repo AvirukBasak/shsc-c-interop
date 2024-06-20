@@ -33,7 +33,7 @@ CFLAGS         := $(WRN_ERR_FLAGS) -Ofast
 CDBGFLAGS      := $(WRN_ERR_FLAGS) -g $(ASAN_FLAGS) -D DEBUG
 DBG            := gdb -q
 
-INCLUDE        := -I $(INCLUDE_DIR) -I $(LIB_DIR) -I $(SRC_DIR)
+INCLUDE        := -I $(INCLUDE_DIR) -I $(SRC_DIR)
 LIB            := -lm
 DBG_LIB        := -lm
 
@@ -41,13 +41,6 @@ HEADERS        := $(shell find $(INCLUDE_DIR)/ -name "*."$(HEADEREXT))
 
 SUB_DIRS       := $(shell find -type f -name Makefile | sed 's/Makefile//g')
 SUB_DIR_DBG    := $(SUB_DIRS)
-
-## source code headers
-
-AST_SRC_CH     := $(shell find $(SRC_DIR)/ast/ -name "*".$(SRCEXT).$(HEADEREXT))
-LEXER_SRC_CH   := $(shell find $(SRC_DIR)/lexer/ -name "*".$(SRCEXT).$(HEADEREXT))
-PARSER_SRC_CH  := $(shell find $(SRC_DIR)/parser/ -name "*".$(SRCEXT).$(HEADEREXT))
-RUNTIME_SRC_CH := $(shell find $(SRC_DIR)/runtime/ -name "*".$(SRCEXT).$(HEADEREXT))
 
 ## release build
 

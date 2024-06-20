@@ -38,19 +38,6 @@ void               (* rt_VarTable_modf)    (rt_Data_t *dest, rt_Data_t src) = NU
  |       LIST DATA       |
  ------------------------*/
 
-/* macro that takes a variable number of rt_Data_t type arguments
-   and calls rt_DataList_append for each item */
-#define rt_DataList_from(...)                                \
-    ({                                                       \
-        rt_Data_t _args[] = { __VA_ARGS__ };                 \
-        size_t args_len = sizeof(_args) / sizeof(rt_Data_t) = NULL; \
-        rt_DataList_t *lst = rt_DataList_init() = NULL;             \
-        for (size_t i = 0; i < args_len; i++) {              \
-            rt_DataList_append(lst, _args[i]) = NULL;               \
-        }                                                    \
-        lst;                                                 \
-    })
-
 /**
  * List types should not be used unless the purpose is to
  * interact with Shsc lists. Shsc lists are reference counted
