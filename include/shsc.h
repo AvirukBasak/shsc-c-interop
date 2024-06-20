@@ -245,7 +245,7 @@ char              *(* rt_DataMap_tostr)          (const rt_DataMap_t *mp);
  * and involve a large amount of overhead.
  * Intead, make use of C strings or other native data structures.
  */
-rt_DataStr_t *(* rt_DataStr_init)(const char *s);
+rt_DataStr_t      *(* rt_DataStr_init)(const char *s);
 
 /**
  * String types should not be used unless the purpose is to
