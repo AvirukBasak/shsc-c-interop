@@ -36,7 +36,7 @@ void shsc_init_apifn_vartable(
      * This function is used to modify the value of a variable that exists
      * in the variable table. It takes care of reference counts.
      */
-    void               (* rt_VarTable_modf)    (rt_Data_t *dest, rt_Data_t src)
+    void               (* _rt_VarTable_modf)    (rt_Data_t *dest, rt_Data_t src)
 ) {
 }
 
@@ -92,7 +92,7 @@ void shsc_init_apifn_map(
      * and involve a large amount of overhead.
      * Intead, make use of C hash maps or other native data structures.
      */
-    rt_DataMap_t      *(* rt_DataMap_init)(),
+    rt_DataMap_t      *(* _rt_DataMap_init)(),
 
     /**
      * Map types should not be used unless the purpose is to
@@ -100,25 +100,25 @@ void shsc_init_apifn_map(
      * and involve a large amount of overhead.
      * Intead, make use of C hash maps or other native data structures.
      */
-    rt_DataMap_t      *(* rt_DataMap_clone)          (const rt_DataMap_t  *mp),
+    rt_DataMap_t      *(* _rt_DataMap_clone)          (const rt_DataMap_t  *mp),
 
-    int64_t            (* rt_DataMap_length)         (const rt_DataMap_t  *mp),
-    void               (* rt_DataMap_destroy)        (rt_DataMap_t       **ptr),
-    void               (* rt_DataMap_insert)         (rt_DataMap_t        *mp,   const char         *key,  rt_Data_t value),
-    void               (* rt_DataMap_del)            (rt_DataMap_t        *mp,   const char         *key),
-    void               (* rt_DataMap_concat)         (const rt_DataMap_t  *mp1,  const rt_DataMap_t *mp2),
-    const char        *(* rt_DataMap_getkey_copy)    (const rt_DataMap_t  *mp,   const char         *key),
+    int64_t            (* _rt_DataMap_length)         (const rt_DataMap_t  *mp),
+    void               (* _rt_DataMap_destroy)        (rt_DataMap_t       **ptr),
+    void               (* _rt_DataMap_insert)         (rt_DataMap_t        *mp,   const char         *key,  rt_Data_t value),
+    void               (* _rt_DataMap_del)            (rt_DataMap_t        *mp,   const char         *key),
+    void               (* _rt_DataMap_concat)         (const rt_DataMap_t  *mp1,  const rt_DataMap_t *mp2),
+    const char        *(* _rt_DataMap_getkey_copy)    (const rt_DataMap_t  *mp,   const char         *key),
 
     /** unlike rt_DataMap_getref, returns NULL if key not found */
-    rt_Data_t         *(* rt_DataMap_getref_errnull) (const rt_DataMap_t *mp,    const char         *key),
+    rt_Data_t         *(* _rt_DataMap_getref_errnull) (const rt_DataMap_t *mp,    const char         *key),
 
     /** unlike rt_DataMap_getref_errnull, CRASHES using rt_throw if key not found.
         data should be updated only by calling
         `void rt_VarTable_modf(rt_Data_t *dest, rt_Data_t src)`
         on the returned data pointer, that'll take care of reference counts */
-    rt_Data_t         *(* rt_DataMap_getref)         (const rt_DataMap_t *mp,     const char        *key),
+    rt_Data_t         *(* _rt_DataMap_getref)         (const rt_DataMap_t *mp,     const char        *key),
 
-    char              *(* rt_DataMap_tostr)          (const rt_DataMap_t *mp)
+    char              *(* _rt_DataMap_tostr)          (const rt_DataMap_t *mp)
 ) {
 }
 
@@ -130,7 +130,7 @@ void shsc_init_apifn_str(
      * and involve a large amount of overhead.
      * Intead, make use of C strings or other native data structures.
      */
-    rt_DataStr_t *(* rt_DataStr_init)(const char *s),
+    rt_DataStr_t      *(* _rt_DataStr_init)(const char *s),
 
     /**
      * String types should not be used unless the purpose is to
@@ -138,36 +138,36 @@ void shsc_init_apifn_str(
      * and involve a large amount of overhead.
      * Intead, make use of C strings or other native data structures.
      */
-    rt_DataStr_t      *(* rt_DataStr_clone)          (const rt_DataStr_t *str),
+    rt_DataStr_t      *(* _rt_DataStr_clone)          (const rt_DataStr_t *str),
 
-    int64_t            (* rt_DataStr_length)         (const rt_DataStr_t *str),
-    void               (* rt_DataStr_destroy)        (rt_DataStr_t       **ptr),
-    void               (* rt_DataStr_toupper)        (rt_DataStr_t        *str),
-    void               (* rt_DataStr_tolower)        (rt_DataStr_t        *str),
-    void               (* rt_DataStr_append)         (rt_DataStr_t        *str, char                 ch),
-    void               (* rt_DataStr_concat)         (rt_DataStr_t        *str, const rt_DataStr_t  *str2),
-    void               (* rt_DataStr_insert)         (rt_DataStr_t        *str, int64_t              idx, char                ch),
-    void               (* rt_DataStr_insert_str)     (rt_DataStr_t        *str, int64_t              idx, const rt_DataStr_t *str2),
-    void               (* rt_DataStr_erase)          (rt_DataStr_t        *str, int64_t              idx, int64_t             len),
-    void               (* rt_DataStr_reverse)        (rt_DataStr_t        *str),
-    bool               (* rt_DataStr_isequal)        (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
-    int64_t            (* rt_DataStr_compare)        (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
-    int64_t            (* rt_DataStr_find)           (const rt_DataStr_t  *str, char                 ch),
-    int64_t            (* rt_DataStr_find_str)       (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
-    rt_DataStr_t      *(* rt_DataStr_substr)         (const rt_DataStr_t  *str, int64_t idx, int64_t len),
-    rt_DataList_t     *(* rt_DataStr_split)          (const rt_DataStr_t  *str, char                 ch),
-    rt_DataList_t     *(* rt_DataStr_split_str)      (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
-    rt_DataStr_t      *(* rt_DataStr_sort)           (rt_DataStr_t        *str),
-    rt_Data_t          (* rt_DataStr_toi64)          (const rt_DataStr_t  *str),
-    rt_Data_t          (* rt_DataStr_tof64)          (const rt_DataStr_t  *str),
-    char              *(* rt_DataStr_getref_errnull) (const rt_DataStr_t  *str, int64_t idx),
+    int64_t            (* _rt_DataStr_length)         (const rt_DataStr_t *str),
+    void               (* _rt_DataStr_destroy)        (rt_DataStr_t       **ptr),
+    void               (* _rt_DataStr_toupper)        (rt_DataStr_t        *str),
+    void               (* _rt_DataStr_tolower)        (rt_DataStr_t        *str),
+    void               (* _rt_DataStr_append)         (rt_DataStr_t        *str, char                 ch),
+    void               (* _rt_DataStr_concat)         (rt_DataStr_t        *str, const rt_DataStr_t  *str2),
+    void               (* _rt_DataStr_insert)         (rt_DataStr_t        *str, int64_t              idx, char                ch),
+    void               (* _rt_DataStr_insert_str)     (rt_DataStr_t        *str, int64_t              idx, const rt_DataStr_t *str2),
+    void               (* _rt_DataStr_erase)          (rt_DataStr_t        *str, int64_t              idx, int64_t             len),
+    void               (* _rt_DataStr_reverse)        (rt_DataStr_t        *str),
+    bool               (* _rt_DataStr_isequal)        (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
+    int64_t            (* _rt_DataStr_compare)        (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
+    int64_t            (* _rt_DataStr_find)           (const rt_DataStr_t  *str, char                 ch),
+    int64_t            (* _rt_DataStr_find_str)       (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
+    rt_DataStr_t      *(* _rt_DataStr_substr)         (const rt_DataStr_t  *str, int64_t idx, int64_t len),
+    rt_DataList_t     *(* _rt_DataStr_split)          (const rt_DataStr_t  *str, char                 ch),
+    rt_DataList_t     *(* _rt_DataStr_split_str)      (const rt_DataStr_t  *str, const rt_DataStr_t  *str2),
+    rt_DataStr_t      *(* _rt_DataStr_sort)           (rt_DataStr_t        *str),
+    rt_Data_t          (* _rt_DataStr_toi64)          (const rt_DataStr_t  *str),
+    rt_Data_t          (* _rt_DataStr_tof64)          (const rt_DataStr_t  *str),
+    char              *(* _rt_DataStr_getref_errnull) (const rt_DataStr_t  *str, int64_t idx),
 
     /** data can be updated by assigning a char to the returned pointer */
-    rt_Data_t         *(* rt_DataStr_getref)(const rt_DataStr_t *str, int64_t idx),
+    rt_Data_t         *(* _rt_DataStr_getref)(const rt_DataStr_t *str, int64_t idx),
 
-    void               (* rt_DataStr_del_index)      (rt_DataStr_t *str, int64_t idx),
-    void               (* rt_DataStr_del_char)       (rt_DataStr_t *str, char ch),
-    char              *(* rt_DataStr_tostr)          (const rt_DataStr_t *str)
+    void               (* _rt_DataStr_del_index)      (rt_DataStr_t *str, int64_t idx),
+    void               (* _rt_DataStr_del_char)       (rt_DataStr_t *str, char ch),
+    char              *(* _rt_DataStr_tostr)          (const rt_DataStr_t *str)
 ) {
 }
 
@@ -181,7 +181,7 @@ void shsc_init_apifn_others(
      * Throws a runtime error with the given message.
      * The message can be formatted using printf-style format specifiers.
      */
-    void (* rt_throw)(const char *fmt, ...) __attribute__((format(printf, 1, 2))),
+    void (* _rt_throw)(const char *fmt, ...) __attribute__((format(printf, 1, 2))),
 
     /*------------------------
      | FUNCTION CALL HANDLER |
@@ -191,7 +191,7 @@ void shsc_init_apifn_others(
      * Calls rt_throw if the number of arguments is less than min_expected_argc.
      * Results in a runtime error.
      */
-    const rt_DataList_t *(* rt_fn_get_valid_args)(int64_t min_expected_argc),
+    const rt_DataList_t *(* _rt_fn_get_valid_args)(int64_t min_expected_argc),
 
     /**
      * Call a function given the module name, procedure name and arguments.
@@ -212,7 +212,7 @@ void shsc_init_apifn_others(
      * rt_DataStr_destroy(&prompt_str),
      * ```
      */
-    rt_Data_t (* rt_fn_call_handler)(
+    rt_Data_t (* _rt_fn_call_handler)(
         const rt_Data_t context,
         const char *module_name,
         const char *proc_name,
@@ -223,7 +223,7 @@ void shsc_init_apifn_others(
      * This function is provided for calling lambda functions.
      * Such lambda functions may be passed by from Shsc code as callbacks.
      */
-    rt_Data_t (* rt_fn_lambda_call_handler)(
+    rt_Data_t (* _rt_fn_lambda_call_handler)(
         const rt_Data_t context,
         const rt_DataLambda_t lambda,
         rt_DataList_t *args
@@ -233,38 +233,38 @@ void shsc_init_apifn_others(
 
 SHSC_EXPORT
 void shsc_init_apifn_ops(
-    void (* rt_op_ampersand)              (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_arith_rshift)           (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_assign)                 (rt_Data_t       *lhs, const rt_Data_t *rhs, bool is_const, bool is_weak),
-    void (* rt_op_asterix)                (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_bang)                   (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_bitwise_lshift)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_bitwise_rshift)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_caret)                  (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_decrement)              (rt_Data_t       *lhs, rt_Data_t       *rhs),
-    void (* rt_op_dot)                    (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_exponent)               (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_floor_divide)           (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_fslash)                 (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_increment)              (rt_Data_t       *lhs, rt_Data_t       *rhs),
-    void (* rt_op_lbrace_angular)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_logical_and)            (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_logical_equal)          (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_logical_greater_equal)  (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_logical_lesser_equal)   (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_logical_or)             (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_logical_unequal)        (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_minus)                  (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_percent)                (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_pipe)                   (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_plus)                   (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_rbrace_angular)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_tilde)                  (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_fnargs_indexing)        (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_fncall)                 (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_indexing)               (const rt_Data_t *lhs, const rt_Data_t *rhs),
-    void (* rt_op_nop)                    (const rt_Data_t *lhs),
-    void (* rt_op_ternary_cond)           (const rt_Data_t *lhs, const rt_Data_t *rhs, const rt_Data_t *condition)
+    void (* _rt_op_ampersand)              (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_arith_rshift)           (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_assign)                 (rt_Data_t       *lhs, const rt_Data_t *rhs, bool is_const, bool is_weak),
+    void (* _rt_op_asterix)                (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_bang)                   (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_bitwise_lshift)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_bitwise_rshift)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_caret)                  (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_decrement)              (rt_Data_t       *lhs, rt_Data_t       *rhs),
+    void (* _rt_op_dot)                    (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_exponent)               (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_floor_divide)           (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_fslash)                 (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_increment)              (rt_Data_t       *lhs, rt_Data_t       *rhs),
+    void (* _rt_op_lbrace_angular)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_logical_and)            (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_logical_equal)          (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_logical_greater_equal)  (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_logical_lesser_equal)   (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_logical_or)             (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_logical_unequal)        (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_minus)                  (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_percent)                (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_pipe)                   (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_plus)                   (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_rbrace_angular)         (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_tilde)                  (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_fnargs_indexing)        (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_fncall)                 (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_indexing)               (const rt_Data_t *lhs, const rt_Data_t *rhs),
+    void (* _rt_op_nop)                    (const rt_Data_t *lhs),
+    void (* _rt_op_ternary_cond)           (const rt_Data_t *lhs, const rt_Data_t *rhs, const rt_Data_t *condition)
 ) {
 }
 
