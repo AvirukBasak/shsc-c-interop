@@ -1,5 +1,5 @@
 proc loadfn(file, symbol)
-    var mod = io:libopen("add.so")
+    var mod = io:libopen("examples/add.dll")
     var add = io:libsym(mod, "shsc_add")
 
     io:print(mod, dbg:typename(mod), type(mod), lf)
