@@ -1,4 +1,6 @@
 proc loadfn(file, symbol)
+    # path to library should be relative to
+    # the present working directory
     var mod = io:libopen("examples/add.dll")
     var add = io:libsym(mod, "shsc_add")
 
