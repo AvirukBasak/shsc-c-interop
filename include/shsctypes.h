@@ -22,4 +22,6 @@ typedef struct rt_DataNativeFn_t rt_DataNativeFn_t;
 typedef struct rt_DataLambda_t rt_DataLambda_t;
 typedef struct rt_DataLibHandle_t rt_DataLibHandle_t;
 
+typedef enum rt_DataType_t rt_DataType_t;
+
 #endif

@@ -31,9 +31,9 @@ typedef bool               (* shsc_rt_Data_isequal_t)     (const rt_Data_t var1,
 typedef int64_t            (* shsc_rt_Data_compare_t)     (const rt_Data_t var1, const rt_Data_t    var2);
 typedef bool               (* shsc_rt_Data_tobool_t)      (const rt_Data_t var);
 typedef char              *(* shsc_rt_Data_tostr_t)       (const rt_Data_t var);
-typedef rt_Data_t          (* shsc_rt_Data_cast_t)        (const rt_Data_t var,  enum rt_DataType_t type);
+typedef rt_Data_t          (* shsc_rt_Data_cast_t)        (const rt_Data_t var,  rt_DataType_t type);
 typedef const char        *(* shsc_rt_Data_typename_t)    (const rt_Data_t var);
-typedef bool               (* shsc_rt_Data_assert_type_t) (const rt_Data_t var,  enum rt_DataType_t expected_type, const char *for_varname);
+typedef bool               (* shsc_rt_Data_assert_type_t) (const rt_Data_t var,  rt_DataType_t expected_type, const char *for_varname);
 typedef enum rt_DataType_t (* shsc_rt_Data_greater_type_t)(const rt_Data_t var1, const rt_Data_t    var2);
 typedef int                (* shsc_rt_Data_print_t)       (const rt_Data_t var);
 
