@@ -48,7 +48,7 @@ else
 endif
 
 TARGET_NAME    := $(LIB_NAME)
-TARGET         := $(TARGET_DIR)/lib$(TARGET_NAME)-rel$(TARGET_EXTENSION)
+TARGET         := $(TARGET_DIR)/lib$(TARGET_NAME)$(TARGET_EXTENSION)
 DBG_TARGET     := $(TARGET_DIR)/lib$(TARGET_NAME)-dbg$(TARGET_EXTENSION)
 
 SOURCES        := $(shell find $(SRC_DIR)/ -name "*."$(SRCEXT)) $(shell find $(SRC_DIR)/ -name "*".$(SRCEXT).$(HEADEREXT))
