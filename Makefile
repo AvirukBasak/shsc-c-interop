@@ -48,8 +48,8 @@ else
 endif
 
 TARGET_NAME    := $(LIB_NAME)
-TARGET         := $(TARGET_DIR)/$(TARGET_NAME)-rel$(TARGET_EXTENSION)
-DBG_TARGET     := $(TARGET_DIR)/$(TARGET_NAME)-dbg$(TARGET_EXTENSION)
+TARGET         := $(TARGET_DIR)/lib$(TARGET_NAME)-rel$(TARGET_EXTENSION)
+DBG_TARGET     := $(TARGET_DIR)/lib$(TARGET_NAME)-dbg$(TARGET_EXTENSION)
 
 SOURCES        := $(shell find $(SRC_DIR)/ -name "*."$(SRCEXT)) $(shell find $(SRC_DIR)/ -name "*".$(SRCEXT).$(HEADEREXT))
 HEADERS        := $(shell find $(INCLUDE_DIR)/ -name "*."$(HEADEREXT))
@@ -64,8 +64,8 @@ $(OBJECTS): $(SOURCES) $(HEADERS)
 	@cd $(SRC_DIR) && $(MAKE)
 
 ## target for executable
-$(TARGET): $(REQ_DIRS) $(LIBRARIES) $(OBJECTS)
-	ar rcs $(TARGET_DIR)/lib$(TARGET_NAME) $(BUILD_DIR)/*-rel.$(OBJEXT)
+$(TARGET): $(REQ_DIRS) $(OBJECTS)
+	ar rcs $(TARGET) $(BUILD_DIR)/*-rel.$(OBJEXT)
 
 # Get the first 27 characters of the PREFIX environment variable
 PREFIX_SUBSTRING := $(shell echo $${PREFIX} | cut -c 1-27)
@@ -80,8 +80,8 @@ $(DBG_OBJECTS): $(SOURCES) $(HEADERS)
 	@cd $(SRC_DIR) && $(MAKE) dbg
 
 ## target for debug executable
-$(DBG_TARGET): $(REQ_DIRS) $(DBG_LIBRARIES) $(DBG_OBJECTS)
-	ar rcs $(TARGET_DIR)/lib$(DBG_TARGET) $(BUILD_DIR)/*-dbg.$(OBJEXT)
+$(DBG_TARGET): $(REQ_DIRS) $(DBG_OBJECTS)
+	ar rcs $(DBG_TARGET) $(BUILD_DIR)/*-dbg.$(OBJEXT)
 
 ## $(REQ_DIRS)
 
