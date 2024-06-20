@@ -65,7 +65,7 @@ $(OBJECTS): $(SOURCES) $(HEADERS)
 
 ## target for executable
 $(TARGET): $(REQ_DIRS) $(OBJECTS)
-	ar rcs $(TARGET) $(BUILD_DIR)/*-rel.$(OBJEXT)
+	ar rcs $(TARGET) $(OBJECTS)
 
 # Get the first 27 characters of the PREFIX environment variable
 PREFIX_SUBSTRING := $(shell echo $${PREFIX} | cut -c 1-27)
@@ -81,7 +81,7 @@ $(DBG_OBJECTS): $(SOURCES) $(HEADERS)
 
 ## target for debug executable
 $(DBG_TARGET): $(REQ_DIRS) $(DBG_OBJECTS)
-	ar rcs $(DBG_TARGET) $(BUILD_DIR)/*-dbg.$(OBJEXT)
+	ar rcs $(DBG_TARGET) $(DBG_OBJECTS)
 
 ## $(REQ_DIRS)
 
