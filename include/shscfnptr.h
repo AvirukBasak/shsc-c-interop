@@ -78,14 +78,14 @@ typedef rt_DataList_t     *(* shsc_rt_DataList_init_t)();
  * and involve a large amount of overhead.
  * Intead, make use of C arrays or other native data structures.
  */
-typedef rt_DataList_t *    (* shsc_rt_DataList_clone_t)         (const rt_DataList_t *lst);
+typedef rt_DataList_t     *(* shsc_rt_DataList_clone_t)         (const rt_DataList_t *lst);
 
 typedef int64_t            (* shsc_rt_DataList_length_t)        (const rt_DataList_t *lst);
 typedef void               (* shsc_rt_DataList_destroy_t)       (rt_DataList_t      **ptr);
-typedef bool               (* shsc_rt_DataList_isequal_t)       (const rt_DataList_t *lst1, const rt_DataList_t *lst2);
-typedef int64_t            (* shsc_rt_DataList_compare_t)       (const rt_DataList_t *lst1, const rt_DataList_t *lst2);
+typedef bool               (* shsc_rt_DataList_isequal_t)       (const rt_DataList_t *p_lst1, const rt_DataList_t *p_lst2);
+typedef int64_t            (* shsc_rt_DataList_compare_t)       (const rt_DataList_t *p_lst1, const rt_DataList_t *p_lst2);
 typedef void               (* shsc_rt_DataList_append_t)        (rt_DataList_t       *lst,  rt_Data_t            var);
-typedef void               (* shsc_rt_DataList_concat_t)        (rt_DataList_t       *lst,  const rt_DataList_t *lst2);
+typedef void               (* shsc_rt_DataList_concat_t)        (rt_DataList_t       *lst,  const rt_DataList_t *p_lst2);
 typedef void               (* shsc_rt_DataList_insert_t)        (rt_DataList_t       *lst,  int64_t              idx,   rt_Data_t var);
 typedef void               (* shsc_rt_DataList_erase_t)         (rt_DataList_t       *lst,  int64_t              idx,   int64_t   len);
 typedef void               (* shsc_rt_DataList_reverse_t)       (rt_DataList_t       *lst);
