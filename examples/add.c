@@ -1,5 +1,5 @@
-#include "../include/shsc.h"
 #include <stdio.h>
+#include "shsc.h"
 
 rt_Data_t shsc_add(rt_Data_t context, rt_DataList_t *numbers) {
     // validate input
