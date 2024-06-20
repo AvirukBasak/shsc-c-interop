@@ -4,7 +4,7 @@
 #include "shscfnptr.h"
 #include "shscinit.h"
 
-SHSC_EXPORT
+MARK_USED
 void shsc_init_apifn_data(
     shsc_rt_Data_bul_t _rt_Data_bul,
     shsc_rt_Data_chr_t _rt_Data_chr,
@@ -53,14 +53,14 @@ void shsc_init_apifn_data(
     shsc_rt_Data_print = _rt_Data_print;
 }
 
-SHSC_EXPORT
+MARK_USED
 void shsc_init_apifn_vartable(
     shsc_rt_VarTable_modf_t _rt_VarTable_modf
 ) {
     shsc_rt_VarTable_modf = _rt_VarTable_modf;
 }
 
-SHSC_EXPORT
+MARK_USED
 void shsc_init_apifn_list(
     shsc_rt_DataList_init_t _rt_DataList_init,
     shsc_rt_DataList_clone_t _rt_DataList_clone,
@@ -105,7 +105,7 @@ void shsc_init_apifn_list(
     shsc_rt_DataList_tostr = _rt_DataList_tostr;
 }
 
-SHSC_EXPORT
+MARK_USED
 void shsc_init_apifn_map(
     shsc_rt_DataMap_init_t _rt_DataMap_init,
     shsc_rt_DataMap_clone_t _rt_DataMap_clone,
@@ -132,7 +132,7 @@ void shsc_init_apifn_map(
     shsc_rt_DataMap_tostr = _rt_DataMap_tostr;
 }
 
-SHSC_EXPORT
+MARK_USED
 void shsc_init_apifn_str(
     shsc_rt_DataStr_init_t _rt_DataStr_init,
     shsc_rt_DataStr_clone_t _rt_DataStr_clone,
@@ -191,7 +191,7 @@ void shsc_init_apifn_str(
     shsc_rt_DataStr_tostr = _rt_DataStr_tostr;
 }
 
-SHSC_EXPORT
+MARK_USED
 void shsc_init_apifn_others(
     shsc_rt_throw_t _rt_throw,
     shsc_rt_fn_get_valid_args_t _rt_fn_get_valid_args,
@@ -204,7 +204,7 @@ void shsc_init_apifn_others(
     shsc_rt_fn_lambda_call_handler = _rt_fn_lambda_call_handler;
 }
 
-SHSC_EXPORT
+MARK_USED
 void shsc_init_apifn_ops(
     shsc_rt_op_ampersand_t _rt_op_ampersand,
     shsc_rt_op_arith_rshift_t _rt_op_arith_rshift,

@@ -141,12 +141,12 @@ typedef void (* shsc_init_apifn_ops_t)(
     shsc_rt_op_ternary_cond_t _rt_op_ternary_cond
 );
 
-SHSC_EXPORT shsc_init_apifn_data_t shsc_init_apifn_data;
-SHSC_EXPORT shsc_init_apifn_vartable_t shsc_init_apifn_vartable;
-SHSC_EXPORT shsc_init_apifn_list_t shsc_init_apifn_list;
-SHSC_EXPORT shsc_init_apifn_map_t shsc_init_apifn_map;
-SHSC_EXPORT shsc_init_apifn_str_t shsc_init_apifn_str;
-SHSC_EXPORT shsc_init_apifn_others_t shsc_init_apifn_others;
-SHSC_EXPORT shsc_init_apifn_ops_t shsc_init_apifn_ops;
+FN_MODIFIERS shsc_init_apifn_data_t shsc_init_apifn_data;
+FN_MODIFIERS shsc_init_apifn_vartable_t shsc_init_apifn_vartable;
+FN_MODIFIERS shsc_init_apifn_list_t shsc_init_apifn_list;
+FN_MODIFIERS shsc_init_apifn_map_t shsc_init_apifn_map;
+FN_MODIFIERS shsc_init_apifn_str_t shsc_init_apifn_str;
+FN_MODIFIERS shsc_init_apifn_others_t shsc_init_apifn_others;
+FN_MODIFIERS shsc_init_apifn_ops_t shsc_init_apifn_ops;
 
 #endif

@@ -5,11 +5,12 @@
 #include <stdint.h>
 
 #if _WIN32
-    #define SHSC_EXPORT __declspec(dllexport)
+    #define DL_EXPORT __declspec(dllexport)
 #else
-    #define SHSC_EXPORT __attribute__((visibility("default")))
+    #define DL_EXPORT __attribute__((visibility("default")))
 #endif
 
+#define MARK_USED __attribute__((used))
 #define FN_MODIFIERS extern
 
 #include "shsctypes.h"
