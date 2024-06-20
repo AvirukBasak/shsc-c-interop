@@ -42,7 +42,7 @@ DBG_LIB        := -lm
 ## targets
 # Detect the operating system
 ifeq ($(OS),Windows_NT)
-	TARGET_EXTENSION := .lib
+	TARGET_EXTENSION := .a
 else
 	TARGET_EXTENSION := .a
 endif
