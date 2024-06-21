@@ -273,4 +273,6 @@ void shsc_init_apifn_ops(
     shsc_rt_op_ternary_cond = _rt_op_ternary_cond;
 }
 
+#else
+    #warning re-inclusion of module 'src/shscinit.c.h'
 #endif

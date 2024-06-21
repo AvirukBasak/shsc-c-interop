@@ -1,3 +1,6 @@
+#ifndef __SHSC_FNPTR_C_H__
+#define __SHSC_FNPTR_C_H__
+
 #include <stdio.h>
 #include "shscfnptr.h"
 
@@ -118,3 +121,7 @@ shsc_rt_op_fncall_t shsc_rt_op_fncall = NULL;
 shsc_rt_op_indexing_t shsc_rt_op_indexing = NULL;
 shsc_rt_op_nop_t shsc_rt_op_nop = NULL;
 shsc_rt_op_ternary_cond_t shsc_rt_op_ternary_cond = NULL;
+
+#else
+    #warning re-inclusion of module 'src/shscfnptr.c.h'
+#endif
