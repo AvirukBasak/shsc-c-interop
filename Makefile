@@ -19,7 +19,7 @@ WRN_ERR_FLAGS  := -Wall\
 				  -Wno-unused-but-set-variable\
 				  -Wno-unused-label\
 				  -Wno-int-in-bool-context
-ASAN_FLAGS	 := -fsanitize=address
+ASAN_FLAGS     := -fsanitize=address
 ASAN_OPTIONS   := ASAN_OPTIONS=detect_leaks=1:$\
 				  fast_unwind_on_malloc=0:$\
 				  strict_init_order=true:$\
@@ -65,7 +65,7 @@ $(OBJECTS): $(SOURCES) $(HEADERS)
 
 ## target for executable
 $(TARGET): $(REQ_DIRS) $(OBJECTS)
-	ar rcs $(TARGET) $(OBJECTS)
+	ar rcs $(TARGET) $(BUILD_DIR)/libshsc-rel.o
 
 # Get the first 27 characters of the PREFIX environment variable
 PREFIX_SUBSTRING := $(shell echo $${PREFIX} | cut -c 1-27)
@@ -81,7 +81,7 @@ $(DBG_OBJECTS): $(SOURCES) $(HEADERS)
 
 ## target for debug executable
 $(DBG_TARGET): $(REQ_DIRS) $(DBG_OBJECTS)
-	ar rcs $(DBG_TARGET) $(DBG_OBJECTS)
+	ar rcs $(DBG_TARGET) $(BUILD_DIR)/libshsc-dbg.o
 
 ## $(REQ_DIRS)
 
