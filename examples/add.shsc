@@ -11,13 +11,14 @@ proc loadfn(file, symbol)
 end
 
 proc main()
-    var add = loadfn("examples/add", "shsc_add")
+    var x = { pa: 1, pb: 2, pc: 3 }
+    x.add = loadfn("examples/add", "shsc_add")
 
     # succeeds
-    var res = add(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    var res = x.add(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     io:print(res, lf)
 
     # fails
-    var res = add(1, 2, 3, [4, 5, 6], 7, 8, 9, 10)
+    var res = x.add(1, 2, 3, [4, 5, 6], 7, 8, 9, 10)
     io:print(res, lf)
 end
