@@ -129,7 +129,7 @@ typedef int64_t            (* shsc_rt_DataMap_length_t)         (const rt_DataMa
 typedef void               (* shsc_rt_DataMap_destroy_t)        (rt_DataMap_t       **ptr);
 typedef void               (* shsc_rt_DataMap_insert_t)         (rt_DataMap_t        *mp,   const char         *key,  rt_Data_t value);
 typedef void               (* shsc_rt_DataMap_del_t)            (rt_DataMap_t        *mp,   const char         *key);
-typedef void               (* shsc_rt_DataMap_concat_t)         (const rt_DataMap_t  *mp1,  const rt_DataMap_t *mp2);
+typedef void               (* shsc_rt_DataMap_concat_t)         (rt_DataMap_t        *mp1,  const rt_DataMap_t *mp2);
 typedef const char        *(* shsc_rt_DataMap_getkey_copy_t)    (const rt_DataMap_t  *mp,   const char         *key);
 
 /** unlike rt_DataMap_getref, returns NULL if key not found */
