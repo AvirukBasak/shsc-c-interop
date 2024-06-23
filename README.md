@@ -9,7 +9,7 @@ You'll need to have the following dependencies installed:
 - `ld` - the linker
 - `ar` - the archiver
 
-Run `make` and the static library will be generated at `target/libshsc.a` (or `target/libshsc.lib` on Windows).
+Run `make` and the static library will be generated at `target/libshsc.a` (builds `target/libshsc.a` on Windows as well).
 
 ## Compile a shared library
 
