@@ -35,6 +35,10 @@ rt_Data_t shsc_add(rt_Data_t this, rt_DataList_t *args) {
 
     shsc_Data_incref(&file);
 
+#ifdef TESTERR
+    shsc_throw("this is a test error: %d", 42);
+#endif
+
     // print this
     shsc_call_fn(
         shsc_Data_null(),
