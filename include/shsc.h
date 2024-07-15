@@ -82,6 +82,6 @@ struct rt_Data_t {
     enum rt_DataType_t type;
 };
 
-#include "shscfnptr.h"
+#include "shscproto.h"
 
 #endif
