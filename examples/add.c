@@ -33,19 +33,32 @@ rt_Data_t shsc_add(rt_Data_t this, rt_DataList_t *args) {
         shsc_DataList_from()
     );
 
+    shsc_Data_incref(&file);
+
     // print this
     shsc_call_fn(
         shsc_Data_null(),
         "io", "print",
         shsc_DataList_from(
             file,
-            shsc_Data_str(shsc_DataStr_init("this")),
+            shsc_Data_str(shsc_DataStr_init(": this")),
             this,
             shsc_Data_chr('\n')
         )
     );
 
-    // shsc_Data_destroy(&file);
+    // print this
+    shsc_call_fn(
+        shsc_Data_null(),
+        "io", "print",
+        shsc_DataList_from(
+            file,
+            shsc_Data_str(shsc_DataStr_init(": reprinted filename to test incref")),
+            shsc_Data_chr('\n')
+        )
+    );
+
+    shsc_Data_destroy(&file);
 
     int64_t sum = 0;
     for (int i = 0; i < shsc_DataList_length(args); ++i) {

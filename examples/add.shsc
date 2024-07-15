@@ -4,8 +4,8 @@ proc loadfn(file, symbol)
     var mod = io:libopen(file)
     var add = io:libsym(mod, "shsc_add")
 
-    io:print(mod, dbg:typename(mod), type(mod), lf)
-    io:print(add, dbg:typename(add), type(add), lf)
+    io:print("add.shsc :", mod, dbg:typename(mod), type(mod), lf)
+    io:print("add.shsc :", add, dbg:typename(add), type(add), lf)
 
     return add
 end
