@@ -27,9 +27,4 @@ typedef struct rt_DataLibHandle_t rt_DataLibHandle_t;
 
 typedef enum rt_DataType_t rt_DataType_t;
 
-struct rt_BoxedData_t {
-    const int64_t rc;
-    rt_Data_t *data;
-};
-
 #endif
