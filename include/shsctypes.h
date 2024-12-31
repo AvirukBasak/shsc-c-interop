@@ -1,6 +1,8 @@
 #ifndef __SHSC_TYPES_H__
 #define __SHSC_TYPES_H__
 
+#include <stdint.h>
+
 /*------------------------
  |      AST STRUCTS      |
  ------------------------*/
@@ -14,6 +16,7 @@ typedef struct ast_Statement_t ast_Statement_t;
  ------------------------*/
 
 typedef struct rt_Data_t rt_Data_t;
+typedef struct rt_BoxedData_t rt_BoxedData_t;
 typedef struct rt_DataStr_t rt_DataStr_t;
 typedef struct rt_DataList_t rt_DataList_t;
 typedef struct rt_DataMap_t rt_DataMap_t;
@@ -23,5 +26,10 @@ typedef struct rt_DataLambda_t rt_DataLambda_t;
 typedef struct rt_DataLibHandle_t rt_DataLibHandle_t;
 
 typedef enum rt_DataType_t rt_DataType_t;
+
+struct rt_BoxedData_t {
+    const int64_t rc;
+    rt_Data_t *data;
+};
 
 #endif

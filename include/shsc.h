@@ -33,7 +33,7 @@ enum rt_DataType_t {
 struct rt_DataProc_t {
     const ast_Identifier_t *module_name;
     const ast_Identifier_t *proc_name;
-    const rt_Data_t *context;
+    rt_BoxedData_t *context;
 };
 
 enum rt_DataLambdaType_t {
@@ -48,7 +48,7 @@ struct rt_DataNativeFn_t {
 };
 
 struct rt_DataLambda_t {
-    const rt_Data_t *context;
+    rt_BoxedData_t *context;
     union {
         const ast_LambdaLiteral_t *nonnative;
         rt_DataNativeFn_t native;
