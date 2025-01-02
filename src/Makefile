@@ -17,7 +17,7 @@ WRN_ERR_FLAGS  := -Wall\
 				  -Wno-unused-but-set-variable\
 				  -Wno-unused-label\
 				  -Wno-int-in-bool-context
-ASAN_FLAGS	 := -fsanitize=address
+ASAN_FLAGS	   := -fsanitize=address
 ASAN_OPTIONS   := ASAN_OPTIONS=detect_leaks=1:$\
 				  fast_unwind_on_malloc=0:$\
 				  strict_init_order=true:$\
@@ -28,7 +28,7 @@ ASAN_OPTIONS   := ASAN_OPTIONS=detect_leaks=1:$\
 				  verbosity=0:$\
 				  halt_on_error=0
 
-CC             := gcc
+CC             ?= clang
 CFLAGS         := $(WRN_ERR_FLAGS) -Ofast -fPIC
 CDBGFLAGS      := $(WRN_ERR_FLAGS) -g $(ASAN_FLAGS) -D DEBUG -fPIC
 DBG            := gdb -q
